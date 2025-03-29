@@ -1,0 +1,78 @@
+\documentclass{article}
+\usepackage{graphicx, subfig, fancyhdr, amsmath, amssymb, amsthm, url, hyperref, geometry, listings, xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+
+% Fix Unicode character issues
+\DeclareUnicodeCharacter{2212}{-}
+
+% Author Information
+\newcommand{\FirstAuthor}{Mohammad Parsa Dini - std id: 400101204}
+\newcommand{\SecondAuthor}{Your Name - std id: XXXXXX}
+\newcommand{\exerciseset}{PCA Analysis Report}
+
+% Page Formatting
+\fancypagestyle{plain}{}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO,LE]{\sffamily\bfseries\large Sharif University of Technology}
+\fancyhead[LO,RE]{\sffamily\bfseries\large EE 25-703: Digital Signal Processing}
+\fancyfoot[LO,RE]{\sffamily\bfseries\large PCA Report}
+\fancyfoot[RO,LE]{\sffamily\bfseries\thepage}
+\renewcommand{\headrulewidth}{1pt}
+\renewcommand{\footrulewidth}{1pt}
+
+% Image Path
+\graphicspath{{figures/}}
+
+%-------------------------------- Title ----------------------------------
+\title{
+    \includegraphics[width=3cm]{logo.png} \\
+    Principal Component Analysis (PCA) Report
+}
+\author{\FirstAuthor \\\SecondAuthor}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms data into a new coordinate system where the greatest variance lies along the first principal component, the second greatest variance along the second component, and so on. This report presents the implementation and analysis of PCA applied to a dataset.
+
+\section*{Data Preprocessing}
+The dataset was first standardized to ensure all features have zero mean and unit variance. This is essential for PCA, as it relies on variance calculations that are affected by different feature scales.
+
+\section*{Eigenvalue Decomposition and Principal Components}
+After computing the covariance matrix of the standardized dataset, eigenvalues and eigenvectors were extracted. The eigenvectors represent principal directions, while the eigenvalues indicate the variance captured by each component.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{eigenvalues_plot.png}  % Placeholder for eigenvalues plot
+    \caption{Eigenvalues indicating variance explained by each principal component.}
+    \label{fig:eigenvalues}
+\end{figure}
+
+\section*{PCA Transformation and Visualization}
+The data was projected onto the top principal components, and a scatter plot of the transformed data was generated.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{pca_scatter.png}  % Placeholder for PCA scatter plot
+    \caption{2D visualization of data in the PCA-transformed space.}
+    \label{fig:pca_scatter}
+\end{figure}
+
+\section*{Variance Explained by Principal Components}
+To determine the optimal number of principal components, a cumulative variance plot was generated.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.5]{variance_explained.png}  % Placeholder for variance explained plot
+    \caption{Cumulative variance explained by principal components.}
+    \label{fig:variance_explained}
+\end{figure}
+
+\section*{Conclusion}
+PCA effectively reduced the dimensionality of the dataset while retaining most of the variance. The top principal components captured significant patterns, enabling efficient data visualization and analysis.
+
+\end{document}
