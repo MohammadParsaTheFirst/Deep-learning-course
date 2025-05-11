@@ -2,77 +2,133 @@
 \usepackage{graphicx, subfig, fancyhdr, amsmath, amssymb, amsthm, url, hyperref, geometry, listings, xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
+\usepackage{lmodern} % Added for consistent font rendering
 
-% Fix Unicode character issues
-\DeclareUnicodeCharacter{2212}{-}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    frame=single,
+    backgroundcolor=\color{gray!10},
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!50!black},
+    stringstyle=\color{red},
+    breaklines=true,
+    breakatwhitespace=true,
+    showstringspaces=false,
+    tabsize=4
+}
 
-% Author Information
-\newcommand{\FirstAuthor}{Mohammad Parsa Dini - std id: 400101204}
-\newcommand{\SecondAuthor}{Your Name - std id: XXXXXX}
-\newcommand{\exerciseset}{PCA Analysis Report}
+\newcommand{\FirstAuthor}{Mohammad Parsa Dini - Std ID: 400101204}
+\newcommand{\exerciseset}{Assignment 1: PCA}
 
-% Page Formatting
 \fancypagestyle{plain}{}
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[RO,LE]{\sffamily\bfseries\large Sharif University of Technology}
-\fancyhead[LO,RE]{\sffamily\bfseries\large EE 25-703: Digital Signal Processing}
-\fancyfoot[LO,RE]{\sffamily\bfseries\large PCA Report}
+\fancyhead[LO,RE]{\sffamily\bfseries\large EE25-647: Deep Learning}
+\fancyfoot[LO,RE]{\sffamily\bfseries\large Assignment 1 Report}
 \fancyfoot[RO,LE]{\sffamily\bfseries\thepage}
 \renewcommand{\headrulewidth}{1pt}
 \renewcommand{\footrulewidth}{1pt}
 
-% Image Path
 \graphicspath{{figures/}}
 
-%-------------------------------- Title ----------------------------------
 \title{
     \includegraphics[width=3cm]{logo.png} \\
-    Principal Component Analysis (PCA) Report
+    Deep Learning Assignment \\ \exerciseset
 }
-\author{\FirstAuthor \\\SecondAuthor}
-\date{}
+\author{\FirstAuthor}
+\date{May 2025}
 
 \begin{document}
 \maketitle
 
 \section*{Introduction}
-Principal Component Analysis (PCA) is a dimensionality reduction technique that transforms data into a new coordinate system where the greatest variance lies along the first principal component, the second greatest variance along the second component, and so on. This report presents the implementation and analysis of PCA applied to a dataset.
 
-\section*{Data Preprocessing}
-The dataset was first standardized to ensure all features have zero mean and unit variance. This is essential for PCA, as it relies on variance calculations that are affected by different feature scales.
+This report details the implementation of Principal Component Analysis (PCA) from scratch for dimensionality reduction on a Brain Tumor dataset, as part of the Deep Learning course assignment at Sharif University of Technology. The dataset consists of MRI images categorized into two classes: "yes" (patients with tumors) and "no" (healthy individuals). The primary objectives were to preprocess the images, implement PCA without using built-in libraries, reduce the dimensionality of the data, reconstruct images from the reduced space, and evaluate the impact of dimensionality reduction on classification performance using a Support Vector Machine (SVM). The report outlines the methodology, results, and analysis of the experiments conducted.
 
-\section*{Eigenvalue Decomposition and Principal Components}
-After computing the covariance matrix of the standardized dataset, eigenvalues and eigenvectors were extracted. The eigenvectors represent principal directions, while the eigenvalues indicate the variance captured by each component.
+\section*{Dataset and Preprocessing}
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.5]{eigenvalues_plot.png}  % Placeholder for eigenvalues plot
-    \caption{Eigenvalues indicating variance explained by each principal component.}
-    \label{fig:eigenvalues}
+% Describing the dataset loading and preprocessing steps
+The Brain Tumor dataset contains MRI images in two folders: "yes" (tumors) and "no" (healthy). Each image was preprocessed using a cropping function to focus on the brain region, converted to grayscale, and resized to a uniform resolution of $128 \times 128$ pixels. The preprocessing steps included:
+
+\begin{itemize}
+    \item \textbf{Cropping}: A contour-based cropping function was applied to isolate the brain region by converting images to grayscale, applying Gaussian blur, thresholding, and extracting the largest contour to define the cropping boundaries.
+    \item \textbf{Grayscale Conversion}: Images were converted from RGB to grayscale to reduce the feature dimensionality from three channels to one.
+    \item \textbf{Resizing}: All images were resized to $128 \times 128$ pixels to ensure uniformity.
+    \item \textbf{Labeling}: Images in the "yes" folder were labeled as 1 (tumor), and those in the "no" folder were labeled as 0 (healthy).
+\end{itemize}
+
+The dataset was loaded using OpenCV, resulting in 253 images, each represented as a $128 \times 128$ grayscale matrix. The images were flattened into vectors of length $16384$ (i.e., $128 \times 128$) for PCA processing. The data was shuffled and split into training ($80\%$, $202$ samples) and testing ($20\%$, $51$ samples) sets using scikit-learn's \texttt{train\_test\_split} function with a random seed for reproducibility.
+
+\section*{PCA Implementation}
+
+% Explaining the PCA implementation and choice of fitting strategy
+PCA was implemented from scratch using NumPy, following these steps:
+
+\begin{enumerate}
+    \item \textbf{Centering the Data}: The mean of the training data (\texttt{X\_train}) was computed and subtracted from each sample to center the data.
+    \item \textbf{Covariance Matrix}: The covariance matrix of the centered data was calculated.
+    \item \textbf{Eigenvalue Decomposition}: Eigenvalues and eigenvectors of the covariance matrix were computed using \texttt{np.linalg.eigh}. The eigenvectors were sorted by descending eigenvalues to select the top $k$ components.
+    \item \textbf{Projection}: The top \texttt{n\_components=20} eigenvectors were used to project the centered training and test data into a lower-dimensional space.
+\end{enumerate}
+
+The PCA model was fitted on the training data (\texttt{X\_train}) only, and the resulting components were used to transform both \texttt{X\_train} and \texttt{X\_test}. This approach was chosen to prevent information leakage from the test set, ensuring that the test data remains unseen during training, as emphasized in class lectures. Fitting PCA on \texttt{X\_train} ensures that the principal components are derived solely from the training distribution, maintaining the integrity of the evaluation process.
+
+The dimensionality of the training data was reduced from $(202, 16384)$ to $(202, 20)$, and the test data from $(51, 16384)$ to $(51, 20)$.
+
+\section*{Image Reconstruction}
+
+% Describing the reconstruction process and visualizing results
+To evaluate the quality of the reduced representation, a random image from the training set was reconstructed from its 20-dimensional PCA representation. The reconstruction process involved:
+
+\begin{itemize}
+    \item Projecting the reduced data back to the original space using the transpose of the PCA components and adding the mean: 
+    \begin{equation*}
+        x_{\textit{recon}} = x_{\textit{train}} U_{\textit{component}}^T + \mu_{\textit{mean}}
+    \end{equation*}
+    \item Reshaping the reconstructed vector to $128 \times 128$ for visualization.
+\end{itemize}
+
+The original and reconstructed images were visualized side-by-side using Matplotlib with a grayscale colormap. The plot revealed that the reconstructed image retained the general structure of the brain but exhibited some loss of fine details due to the significant dimensionality reduction (from 16384 to 20 dimensions). This loss is expected, as PCA prioritizes variance retention, potentially discarding low-variance features that contribute to fine textures.
+
+\begin{figure}[h]
+    \centering{\includegraphics[width=0.45\textwidth]{aaaaaaaaaaaa.png}}
+    %\hfill
+    \caption{The image illustrates an image from the dataset(left) and also the result of reconstruction of this image(right).}
+    %\label{fig:reconstruction_comparison}
 \end{figure}
 
-\section*{PCA Transformation and Visualization}
-The data was projected onto the top principal components, and a scatter plot of the transformed data was generated.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.5]{pca_scatter.png}  % Placeholder for PCA scatter plot
-    \caption{2D visualization of data in the PCA-transformed space.}
-    \label{fig:pca_scatter}
-\end{figure}
+\section*{Classification and Results}
 
-\section*{Variance Explained by Principal Components}
-To determine the optimal number of principal components, a cumulative variance plot was generated.
+% Presenting the classification results before and after PCA
+A linear Support Vector Machine (SVM) was trained to classify images as tumor (1) or healthy (0), and its performance was evaluated on the test set before and after dimensionality reduction.
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[scale=0.5]{variance_explained.png}  % Placeholder for variance explained plot
-    \caption{Cumulative variance explained by principal components.}
-    \label{fig:variance_explained}
-\end{figure}
+\begin{itemize}
+    \item \textbf{Before Dimensionality Reduction}: The SVM was trained on the original \texttt{X\_train} ($202 \times 16384$) and tested on \texttt{X\_test} ($51 \times 16384$). The accuracy on the test set was approximately $74.51\%$.
+    \item \textbf{After Dimensionality Reduction}: The SVM was trained on the reduced \texttt{X\_train\_red} ($202 \times 20$) and tested on \texttt{X\_test\_red} ($51 \times 20$). The accuracy on the test set was approximately $62.75\%$.
+\end{itemize}
+
+The classification accuracy decreased after applying PCA, suggesting that the reduction to 20 components may have discarded features critical for distinguishing between tumor and healthy images.
+
+\section*{Analysis and Discussion}
+
+% Analyzing the results and answering the questions posed in the notebook
+The decrease in classification accuracy after PCA (from $74.51\%$ to $62.75\%$) indicates that the 20 principal components did not capture sufficient discriminative information for the SVM to effectively separate the classes. PCA, being an unsupervised method, maximizes variance without considering class labels. In this case, some features relevant to tumor detection may have had low variance and were thus excluded in the reduced representation.
+
+The reconstruction results further support this observation. While the reconstructed image preserved the overall brain structure, the loss of fine details likely corresponds to the loss of subtle patterns that differentiate tumorous from healthy tissue. This highlights a key limitation of unsupervised dimensionality reduction: it may not prioritize features that are most relevant for the classification task.
+
+To address the question posed in the notebook, unsupervised dimensionality reduction does not always increase accuracy. Its impact depends on the dataset's structure. If the original features contain significant noise or redundancy, PCA can improve accuracy by focusing on the most informative components. However, if critical discriminative features are discarded, as observed here, accuracy may decrease. Supervised methods, such as Linear Discriminant Analysis (LDA), might yield better results for classification tasks by explicitly considering class labels during dimensionality reduction.
 
 \section*{Conclusion}
-PCA effectively reduced the dimensionality of the dataset while retaining most of the variance. The top principal components captured significant patterns, enabling efficient data visualization and analysis.
+
+% Summarizing the findings and suggesting improvements
+This assignment demonstrated the implementation of PCA from scratch for dimensionality reduction on a Brain Tumor dataset. The preprocessing steps effectively standardized the MRI images, and the PCA implementation successfully reduced the dimensionality from 16384 to 20 features. However, the classification accuracy decreased after PCA, indicating that the reduced representation lost important discriminative information. The reconstructed images showed a loss of fine details, consistent with the reduced classification performance.
+
+Future improvements could include experimenting with different numbers of principal components to find an optimal balance between dimensionality reduction and information retention. Additionally, exploring supervised dimensionality reduction techniques or incorporating domain-specific feature engineering could enhance classification performance. This exercise underscored the importance of carefully evaluating the impact of dimensionality reduction on specific tasks, particularly in medical imaging applications where subtle details are critical.
 
 \end{document}
