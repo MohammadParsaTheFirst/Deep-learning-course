@@ -142,30 +142,30 @@ Both models are trained on the Cora dataset using the Adam optimizer with a lear
 The \texttt{run} function executes 10 runs, reporting the mean and standard deviation of validation loss, test accuracy, and runtime.
 
 \section*{Results}
-The reported results for the models are as follows:
-- \textbf{GCN}:
-  - Validation Loss: 0.7452
-  - Test Accuracy: 0.798 ± 0.008
-  - Duration: 6.482 seconds
-- \textbf{GraphSAGE (Mean Aggregation)}:
-  - Validation Loss: 0.7619
-  - Test Accuracy: 0.790 ± 0.015
-  - Duration: 0.905 seconds
-- \textbf{GraphSAGE (Sum Aggregation)}:
-  - Validation Loss: 1.0896
-  - Test Accuracy: 0.738 ± 0.028
-  - Duration: 0.775 seconds
-- \textbf{GraphSAGE (Max Aggregation)}:
-  - Validation Loss: 0.9350
-  - Test Accuracy: 0.762 ± 0.015
-  - Duration: 0.951 seconds
+The reported results for the models are as follows:\\
+
+\begin{table}[h]
+    \centering
+    \caption{Performance of GCN and GraphSAGE Models on Cora Dataset}
+    \label{tab:results}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Model} & \textbf{Validation Loss} & \textbf{Test Accuracy} & \textbf{Duration (s)} \\
+        \midrule
+        GCN & 0.7452 & 0.798 $\pm$ 0.008 & 6.482 \\
+        GraphSAGE (Mean Aggr.) & 0.7619 & 0.790 $\pm$ 0.015 & 0.905 \\
+        GraphSAGE (Sum Aggr.) & 1.0896 & 0.738 $\pm$ 0.028 & 0.775 \\
+        GraphSAGE (Max Aggr.) & 0.9350 & 0.762 $\pm$ 0.015 & 0.951 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 The GCN model achieves the highest test accuracy (0.798), followed by GraphSAGE with mean aggregation (0.790). Sum and max aggregations perform worse, with test accuracies of 0.738 and 0.762, respectively. GraphSAGE models are significantly faster, with runtimes under 1 second compared to GCN’s 6.482 seconds, likely due to simpler aggregation mechanisms.
 
 \section*{Analysis and Inferences}
-- \textbf{GCN vs. GraphSAGE}: GCN normalizes neighbor contributions by degree, which may help in stabilizing training on graphs with varying node degrees, leading to better accuracy on Cora. GraphSAGE’s inductive approach, which does not rely on the entire graph structure during training, makes it faster but less effective on this transductive task.
-- \textbf{Aggregation Methods}: Mean aggregation in GraphSAGE performs best among the three, as it balances neighbor contributions, while sum aggregation may overemphasize high-degree nodes, and max aggregation may lose information by focusing only on the maximum value.
-- \textbf{Code Robustness}: The code includes proper initialization (Glorot for GCN, uniform for GraphSAGE) and handles edge cases (e.g., preventing division by zero in degree normalization). The use of \texttt{torch.cuda.synchronize} ensures accurate timing on GPU.
+- \textbf{GCN vs. GraphSAGE}: GCN normalizes neighbor contributions by degree, which may help in stabilizing training on graphs with varying node degrees, leading to better accuracy on Cora. GraphSAGE’s inductive approach, which does not rely on the entire graph structure during training, makes it faster but less effective on this transductive task.\\
+- \textbf{Aggregation Methods}: Mean aggregation in GraphSAGE performs best among the three, as it balances neighbor contributions, while sum aggregation may overemphasize high-degree nodes, and max aggregation may lose information by focusing only on the maximum value.\\
+- \textbf{Code Robustness}: The code includes proper initialization (Glorot for GCN, uniform for GraphSAGE) and handles edge cases (e.g., preventing division by zero in degree normalization). The use of \texttt{torch.cuda.synchronize} ensures accurate timing on GPU.\\
 - \textbf{Improvements}: The GraphSAGE implementation could include normalization (e.g., layer normalization) or additional non-linearities in the update step to improve performance. The GCN model could benefit from additional layers or residual connections for deeper architectures.
 
 \section*{Conclusion}
