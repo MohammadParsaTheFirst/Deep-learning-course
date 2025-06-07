@@ -216,26 +216,33 @@ To evaluate the model's performance, two figures are provided:
 
 \begin{figure}[h]
     \centering
-    \subfloat[Real Images (Epoch 0)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_0.png}}
-    \hfill
-    \subfloat[Generated Images (Epoch 0)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_0.png}}
-    \\
-    \subfloat[Real Images (Epoch 10)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_10.png}}
-    \hfill
-    \subfloat[Generated Images (Epoch 10)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_10.png}}
-    \\
-    \subfloat[Real Images (Epoch 19)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_19.png}}
-    \hfill
-    \subfloat[Generated Images (Epoch 19)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_19.png}}
+    \includegraphics[width=0.8\textwidth]{myout.png}
     \caption{Comparison of real and generated MNIST images at epochs 0, 10, and 19. The generated images show progressive improvement in capturing digit-like structures as training progresses.}
     \label{fig:rbm_output}
 \end{figure}
+
+% \begin{figure}[h]
+%     \centering
+%     \subfloat[Real Images (Epoch 0)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_0.png}}
+%     \hfill
+%     \subfloat[Generated Images (Epoch 0)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_0.png}}
+%     \\
+%     \subfloat[Real Images (Epoch 10)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_10.png}}
+%     \hfill
+%     \subfloat[Generated Images (Epoch 10)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_10.png}}
+%     \\
+%     \subfloat[Real Images (Epoch 19)]{\includegraphics[width=0.45\textwidth]{output/real_epoch_19.png}}
+%     \hfill
+%     \subfloat[Generated Images (Epoch 19)]{\includegraphics[width=0.45\textwidth]{output/fake_epoch_19.png}}
+%     \caption{Comparison of real and generated MNIST images at epochs 0, 10, and 19. The generated images show progressive improvement in capturing digit-like structures as training progresses.}
+%     \label{fig:rbm_output}
+% \end{figure}
 
 Figure \ref{fig:rbm_output} shows the real and generated images at epochs 0, 10, and 19. Initially, the generated images are noisy, but by epoch 19, they begin to resemble MNIST digits, indicating that the RBM is learning meaningful features.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{output/generated_samples.png}
+    \includegraphics[width=0.4\textwidth]{Screenshot 2025-06-07 173406.png}
     \caption{Grid of generated samples after 20 epochs, showcasing the RBM's ability to produce digit-like images through Gibbs sampling.}
     \label{fig:generated_samples}
 \end{figure}
