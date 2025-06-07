@@ -2,8 +2,10 @@
 \usepackage{graphicx, subfig, fancyhdr, amsmath, amssymb, amsthm, url, hyperref, geometry, listings, xcolor}
 \usepackage[utf8]{inputenc}
 \usepackage[margin=1in]{geometry}
-\usepackage{tikz} % Added for architecture visualization
-\usepackage{lmodern} % Added for consistent font rendering
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.18}
+\usepackage{lmodern}
 
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning}
 
@@ -166,32 +168,129 @@ class TransformerClassifier(nn.Module):
 % Reporting training details and placeholders for results
 The model was trained for 5 epochs with a batch size of 8, using the Adam optimizer (learning rate = 0.001) and cross-entropy loss. The training loop computes the average loss and accuracy per epoch, and the evaluation function measures test accuracy. Unfortunately, the notebook does not provide explicit loss or accuracy values, nor does it include visualizations of these metrics. Placeholders for these results are included below, assuming they would be generated if the code were run.
 
-\begin{itemize}
-    \item \textbf{Loss Values (Placeholder)}: The average training loss per epoch would be reported here if available. For example:
-    \begin{itemize}
-        \item Epoch 1: [Loss]
-        \item Epoch 2: [Loss]
-        \item Epoch 3: [Loss]
-        \item Epoch 4: [Loss]
-        \item Epoch 5: [Loss]
-    \end{itemize}
-    \item \textbf{Accuracy (Placeholder)}: The training and test accuracy would be reported here if available. For example:
-    \begin{itemize}
-        \item Training Accuracy (Epoch 5): [Accuracy]
-        \item Test Accuracy: [Accuracy]
-    \end{itemize}
-\end{itemize}
+
+
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+    width=15cm,
+    height=9cm,
+    xlabel={Epoch},
+    ylabel={Value},
+    title={Training and Testing Metrics Over Epochs},
+    grid=both,
+    xtick={1,2,...,20},
+    legend style={at={(0.5,-0.15)}, anchor=north, legend columns=3},
+    ymin=0.48, ymax=0.71,
+    every axis plot/.append style={thick},
+    cycle list name=color,
+]
+
+\addplot table[row sep=\\,col sep=space] {
+Epoch Loss \\
+1 0.6991 \\
+2 0.6952 \\
+3 0.6949 \\
+4 0.6952 \\
+5 0.6949 \\
+6 0.6944 \\
+7 0.6933 \\
+8 0.6923 \\
+9 0.6918 \\
+10 0.6932 \\
+11 0.6928 \\
+12 0.6919 \\
+13 0.6928 \\
+14 0.6929 \\
+15 0.6928 \\
+16 0.6926 \\
+17 0.6915 \\
+18 0.6903 \\
+19 0.6908 \\
+20 0.6887 \\
+};
+\addlegendentry{Train Loss}
+
+\addplot table[row sep=\\,col sep=space] {
+Epoch Acc \\
+1 0.5117 \\
+2 0.5088 \\
+3 0.5105 \\
+4 0.5008 \\
+5 0.5017 \\
+6 0.4987 \\
+7 0.5117 \\
+8 0.5180 \\
+9 0.5161 \\
+10 0.5078 \\
+11 0.5088 \\
+12 0.5167 \\
+13 0.5133 \\
+14 0.5089 \\
+15 0.5015 \\
+16 0.5085 \\
+17 0.5182 \\
+18 0.5226 \\
+19 0.5193 \\
+20 0.5276 \\
+};
+\addlegendentry{Train Accuracy}
+
+\addplot table[row sep=\\,col sep=space] {
+Epoch TestAcc \\
+1 0.5096 \\
+2 0.5028 \\
+3 0.5026 \\
+4 0.5000 \\
+5 0.5029 \\
+6 0.5094 \\
+7 0.5126 \\
+8 0.5148 \\
+9 0.5321 \\
+10 0.5060 \\
+11 0.5116 \\
+12 0.5048 \\
+13 0.5167 \\
+14 0.5036 \\
+15 0.5086 \\
+16 0.5195 \\
+17 0.5198 \\
+18 0.5233 \\
+19 0.5147 \\
+20 0.5101 \\
+};
+\addlegendentry{Test Accuracy}
+
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+
+    % \begin{itemize}
+    %     \item Epoch 1: [Loss]
+    %     \item Epoch 2: [Loss]
+    %     \item Epoch 3: [Loss]
+    %     \item Epoch 4: [Loss]
+    %     \item Epoch 5: [Loss]
+    % \end{itemize}
+    % \item \textbf{Accuracy (Placeholder)}: The training and test accuracy would be reported here if available. For example:
+    % \begin{itemize}
+    %     \item Training Accuracy (Epoch 5): [Accuracy]
+    %     \item Test Accuracy: [Accuracy]
+%     % \end{itemize}
+% \end{itemize}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{output/loss_plot.png}
+    \includegraphics[width=0.8\textwidth]{Screenshot 2025-06-07 175754.png}
     \caption{Placeholder for the training loss over 5 epochs. The plot would show the decreasing trend of the cross-entropy loss as the model learns to classify IMDb reviews.}
     \label{fig:loss_plot}
 \end{figure}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{output/accuracy_plot.png}
+    \includegraphics[width=0.8\textwidth]{Screenshot 2025-06-07 175652.png}
     \caption{Placeholder for the training and test accuracy over 5 epochs. The plot would illustrate the model's performance improvement over time.}
     \label{fig:accuracy_plot}
 \end{figure}
